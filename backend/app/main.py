@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import routes
-from app.models.models import Base, engine
 
-app = FastAPI()
+app = FastAPI(redoc_url=None)
 
 # Enable CORS for all routes
 app.add_middleware(
@@ -14,8 +12,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create the database tables
-Base.metadata.create_all(bind=engine)
-
-# Include the API routes
-app.include_router(routes.router, prefix="")
+@app.get("/")
+async def hello():
+    return {"message": "Hello World"}
