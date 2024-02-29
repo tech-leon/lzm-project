@@ -26,7 +26,8 @@ CREATE TABLE Users(
 						'Mr', 
 						'Miss', 
 						'Ms', 
-						'Mrs'
+						'Mrs',
+						NULL
 						)), -- DEFAULT IS NULL but CHECK IS NOT incluted NULL, so we cannot enter NULL.
 	firstName		VARCHAR(20)		NOT NULL,
 	lastName		VARCHAR(20)		NOT NULL,
@@ -35,7 +36,7 @@ CREATE TABLE Users(
 	addrStreet		VARCHAR(50)		NULL,
 	addrCity		VARCHAR(15)		NULL,
 	addrPostcode	CHAR(4)			NULL, 
-		CHECK (LENGTH(addrPostcode) = 4), -- Defult IS NULL but CHECK LENGTH TO 4
+		CHECK (LENGTH(addrPostcode) = 4 OR addrPostcode IN (NULL)), -- Defult IS NULL but CHECK LENGTH TO 4
     createDate		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
    
@@ -57,8 +58,8 @@ CREATE TABLE Income(
 							)),
 	POSITION	VARCHAR(50)		NULL,
 	location	VARCHAR(200)	NULL,
-	startDate	DATETIME		NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
-	endDate		DATETIME		NULL, -- (Leon note: Check with status.) Ignore my note, and I'll be back to look next time.
+	startDate	DATE			NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
+	endDate		DATE			NULL, -- (Leon note: Check with status.) Ignore my note, and I'll be back to look next time.
 	frequency	VARCHAR(15)		NOT NULL, 
 		CHECK (frequency IN (
 							'OneTime',
@@ -69,8 +70,9 @@ CREATE TABLE Income(
 							'Seminannually',
 							'Annual'
 							)),
-    status		BIT				NOT NULL  -- binary, use 0 for on, 1 for off
-    ) AUTO_INCREMENT = 101; -- Double auto_increment
+    status		BIT				NOT NULL,  -- binary, use 0 for on, 1 for off
+	CONSTRAINT	FKinc_userID	FOREIGN KEY (userID) REFERENCES Users(userID)
+    ) AUTO_INCREMENT = 101; -- Double auto_increment -- Zoe: tested, can not assign starting value directly, should be in the CREATE TABLE statement according to chatGPT... 
 
     
 -- Create Salaries table for storing income breakdown.
@@ -80,8 +82,9 @@ CREATE TABLE Salaries(
 	salaryID	INT			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	incomeID	INT			NOT NULL, -- NO fk
 	amount		INT			NOT NULL,
-    salaryDate	DATETIME	NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
-	note		TEXT		NULL) AUTO_INCREMENT = 1001; -- Double auto_increment
+    salaryDate	DATE		NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
+	note		TEXT		NULL,
+	CONSTRAINT	FKsal_incomeID	FOREIGN KEY (incomeID) REFERENCES Income(incomeID)) AUTO_INCREMENT = 1001; -- Double auto_increment
 
 
 -- Create Categories table for the categories of spendings and goals.
@@ -89,7 +92,7 @@ DROP TABLE IF EXISTS Categories;
 
 CREATE TABLE Categories(
 	categoryID		INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	categoryName	VARCHAR(50) NOT NULL -- The longest word IS 18 IN your CHECK.
+	categoryName	VARCHAR(20) NOT NULL DEFAULT 'Uncateggorised'-- The longest word IS 18 IN your CHECK.
 		CHECK (categoryName IN (
 								'Food', 
 								'Education', 
@@ -117,8 +120,11 @@ CREATE TABLE Spendings(
 	categoryID	INT			NOT NULL, -- NO fk
 	spDateTime	DATETIME	NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
 	amount		INT			NOT NULL,
-	note		TEXT		NULL) AUTO_INCREMENT = 9001; -- Double auto_increment
-
+	note		TEXT		NULL,
+	CONSTRAINT	FKsp_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
+	CONSTRAINT	FKsp_categoryID	FOREIGN KEY (categoryID) REFERENCES categories(categoryID)
+	) AUTO_INCREMENT = 9001; -- Double auto_increment
+	
 
 -- 	Create Goals for storing the goals of users.
 DROP TABLE IF EXISTS Goals;
@@ -128,10 +134,13 @@ CREATE TABLE Goals(
 	userID		INT				NOT NULL, -- NO fk
 	categoryID	INT				NOT NULL, -- NO fk
 	gName		VARCHAR(100)	NOT NULL,
-	startDate	DATETIME		NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
-	finalDate	DATETIME		NOT NULL,
+	startDate	DATE			NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
+	finalDate	DATE			NOT NULL,
 	amount		INT				NOT NULL,
-	note		TEXT			NULL) AUTO_INCREMENT = 4001; -- Double auto_increment
+	note		TEXT			NULL,
+	CONSTRAINT	FKgo_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
+	CONSTRAINT	FKgo_categoryID	FOREIGN KEY (categoryID) REFERENCES categories(categoryID)
+	) AUTO_INCREMENT = 4001; -- Double auto_increment
 
 
 -- Create Investment Types table for the investments.
@@ -139,7 +148,7 @@ DROP TABLE IF EXISTS InvestType;
 
 CREATE TABLE InvestType(
 	investTypeID	INT				NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	investType		VARCHAR(50)		NOT NULL, 
+	investType		VARCHAR(20)		NOT NULL, 
 		CHECK (investType IN (
 								'Stock', 
 								'Bond',
@@ -157,11 +166,14 @@ CREATE TABLE Investments(
 	userID			INT			NOT NULL, -- NO fk
 	categoryID		INT			NOT NULL, -- NO fk
 	investAmount	INT			NOT NULL,
-	startDate		DATETIME	NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
-	maturityDate	DATETIME	NULL,
+	startDate		DATE		NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
+	maturityDate	DATE		NULL,
 	marketValue		INT			NULL,
 	investReturn	INT			NOT NULL DEFAULT 0,
-	  CHECK (investReturn >= 0 AND investReturn <= 100)) AUTO_INCREMENT = 6001; -- Double auto_increment
+	  CHECK (investReturn >= 0 AND investReturn <= 100),
+	CONSTRAINT	FKinv_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
+	CONSTRAINT	FKinv_categoryID	FOREIGN KEY (categoryID) REFERENCES categories(categoryID)
+	) AUTO_INCREMENT = 6001; -- Double auto_increment
 
 --	**************************************************************************************
 --	Insert data into database.
