@@ -56,7 +56,7 @@ CREATE TABLE Income(
 							'OtherIncome', 
 							NULL
 							)),
-	POSITION	VARCHAR(50)		NULL,
+	position	VARCHAR(50)		NULL,
 	location	VARCHAR(200)	NULL,
 	startDate	DATE			NOT NULL, 
 	endDate		DATE			NULL, -- (Leon note: Check with status.)
@@ -164,7 +164,6 @@ DROP TABLE IF EXISTS Investments;
 CREATE TABLE Investments(
 	investmentID	INT			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	userID			INT			NOT NULL,
-	categoryID		INT			NOT NULL,
 	investAmount	INT			NOT NULL,
 	startDate		DATE		NOT NULL,
 	maturityDate	DATE		NULL,
