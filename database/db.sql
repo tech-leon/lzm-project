@@ -1,7 +1,7 @@
 /*
  * Name:	FinSense
- * Version: 0.1.0
- * Update:	28/02/2024
+ * Version: 0.2.0
+ * Update:	04/03/2024
  * Author:	Zoe
  */
 
@@ -122,7 +122,7 @@ CREATE TABLE Spendings(
 	amount		INT			NOT NULL,
 	note		TEXT		NULL,
 	CONSTRAINT	FKsp_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
-	CONSTRAINT	FKsp_categoryID	FOREIGN KEY (categoryID) REFERENCES Categories(categoryID) -- < c should be capitalised.
+	CONSTRAINT	FKsp_categoryID	FOREIGN KEY (categoryID) REFERENCES Categories(categoryID)
 	) AUTO_INCREMENT = 9001; 
 	
 
@@ -139,7 +139,7 @@ CREATE TABLE Goals(
 	amount		INT				NOT NULL,
 	note		TEXT			NULL,
 	CONSTRAINT	FKgo_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
-	CONSTRAINT	FKgo_categoryID	FOREIGN KEY (categoryID) REFERENCES Categories(categoryID) -- < c should be capitalised.
+	CONSTRAINT	FKgo_categoryID	FOREIGN KEY (categoryID) REFERENCES Categories(categoryID)
 	) AUTO_INCREMENT = 4001; 
 
 
@@ -171,7 +171,7 @@ CREATE TABLE Investments(
 	investReturn	INT			NOT NULL DEFAULT 0,
 	  CHECK (investReturn >= 0 AND investReturn <= 100),
 	CONSTRAINT	FKinv_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
-	CONSTRAINT	FKinv_categoryID	FOREIGN KEY (categoryID) REFERENCES Categories(categoryID) -- < c should be capitalised.
+	CONSTRAINT	FKinv_categoryID	FOREIGN KEY (categoryID) REFERENCES Categories(categoryID)
 	) AUTO_INCREMENT = 6001;
 
 --	**************************************************************************************
