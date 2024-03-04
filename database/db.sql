@@ -164,6 +164,7 @@ DROP TABLE IF EXISTS Investments;
 CREATE TABLE Investments(
 	investmentID	INT			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	userID			INT			NOT NULL,
+	investTypeID	INT			NOT NULL,
 	investAmount	INT			NOT NULL,
 	startDate		DATE		NOT NULL,
 	maturityDate	DATE		NULL,
@@ -171,7 +172,7 @@ CREATE TABLE Investments(
 	investReturn	INT			NOT NULL DEFAULT 0,
 	  CHECK (investReturn >= 0 AND investReturn <= 100),
 	CONSTRAINT	FKinv_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
-	CONSTRAINT	FKinv_categoryID	FOREIGN KEY (categoryID) REFERENCES Categories(categoryID)
+	CONSTRAINT	FKinv_typeID	FOREIGN KEY (investTypeID) REFERENCES InvestType(investTypeID)
 	) AUTO_INCREMENT = 6001;
 
 --	**************************************************************************************
