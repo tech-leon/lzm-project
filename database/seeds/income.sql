@@ -4,7 +4,7 @@ VALUES
     ('1', NULL, NULL, 'PartTime', NULL, 'Perth', '2019-08-09', '2022-07-24', 'Weekly', 1),
     ('2', 'Commonwealth Bank', 'Banking/Finance', 'FullTime', 'Financial Analyst', 'Perth', '2020-05-29', '2023-05-14', 'Weekly', 1),
     ('2', 'Telstra Corporation', 'Telecommunications', 'PartTime', 'Network Technician', 'Perth', '2023-11-05', '2026-10-20', 'Monthly', 0),
-    ('2', NULL, 'Banking/Finance', 'PartTime', 'Bank Teller', 'Perth', '2021-08-20', '2024-08-04', 'Semiannually', 0),
+    ('2', NULL, 'Banking/Finance', 'PartTime', 'Bank Teller', 'Perth', '2021-08-20', '2024-08-04', 'Semiannually', 0), -- checking function error.
     ('3', 'Woolworths Group', 'Retail', 'FullTime', 'Store Manager', 'Perth', '2019-04-26', '2022-04-10', 'Weekly', 1),
     ('3', 'Wesfarmers', 'Conglomerate/Retail', 'Casual', 'Sales Associate', 'Perth', '2021-08-04', '2024-07-19', 'Quarterly', 0),
     ('4', 'CSL Limited', 'Biotechnology/Health', 'FullTime', 'Research Scientist', 'Sydney', '2021-05-01', '2024-04-15', 'Weekly', 0),

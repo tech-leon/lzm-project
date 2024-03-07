@@ -1,11 +1,10 @@
 /*
  * Name:	FinSense
- * Version: 0.2.0
+ * Version:	0.2.1
  * Update:	04/03/2024
  * Author:	Zoe
+ * ****************************************************************************
  */
-
---  *****************************************************************************************
 
 --	Create lzmdb database if it does not exist.
 DROP DATABASE IF EXISTS lzmdb;
@@ -13,12 +12,13 @@ CREATE DATABASE lzmdb;
 USE lzmdb;
 
 --	Create Users table to hold personal information of users.
---  Only for developers, this table has a password field managed with encryption, change frequency, 2-factor authentication.
+--	Only for developers, this table has a password field managed with encryption, 
+--  change frequency, 2-factor authentication.
 DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users(
 	userID			INT				NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	email			VARCHAR(100)	NOT NULL UNIQUE, -- Neet to avoid the email duplicate.
+	email			VARCHAR(100)	NOT NULL UNIQUE,
 		CHECK (email LIKE '%@%'),
 	password		VARCHAR(20)		NOT NULL,
 	title			VARCHAR(12)		NULL, 
@@ -71,8 +71,10 @@ CREATE TABLE Income(
 							'Annual'
 							)),
     status		BIT				NOT NULL,  -- binary, use 0 for on, 1 for off
-	CONSTRAINT	FKinc_userID	FOREIGN KEY (userID) REFERENCES Users(userID)
-    ) AUTO_INCREMENT = 101; 
+
+	CONSTRAINT	FKinc_userID	FOREIGN KEY (userID) REFERENCES Users(userID))
+
+    AUTO_INCREMENT = 101; 
 
     
 -- Create Salaries table for storing income breakdown.
@@ -84,14 +86,17 @@ CREATE TABLE Salaries(
 	amount		INT			NOT NULL,
     salaryDate	DATE		NOT NULL, 
 	note		TEXT		NULL,
-	CONSTRAINT	FKsal_incomeID	FOREIGN KEY (incomeID) REFERENCES Income(incomeID)) AUTO_INCREMENT = 1001; 
+
+	CONSTRAINT	FKsal_incomeID	FOREIGN KEY (incomeID) REFERENCES Income(incomeID)) 
+
+    AUTO_INCREMENT = 1001; 
 
 
 -- Create Categories table for the categories of spendings and goals.
 DROP TABLE IF EXISTS Categories;
 
 CREATE TABLE Categories(
-	categoryID		INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	categoryID		INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	categoryName	VARCHAR(20) NOT NULL DEFAULT 'Uncateggorised'
 		CHECK (categoryName IN (
 								'Food', 
@@ -118,11 +123,14 @@ CREATE TABLE Spendings(
 	spendingID	INT			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	userID		INT			NOT NULL,
 	categoryID	INT			NOT NULL, 
-	spDateTime	DATETIME	NOT NULL, -- Maybe we can consider the data type as DATE, only save the date without time.
+	spDateTime	DATE	    NOT NULL,
 	amount		INT			NOT NULL,
 	note		TEXT		NULL,
-	CONSTRAINT	FKsp_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
-	CONSTRAINT	FKsp_categoryID	FOREIGN KEY (categoryID) REFERENCES Categories(categoryID)
+
+	CONSTRAINT	FKsp_userID     FOREIGN KEY (userID)    REFERENCES Users(userID),
+	CONSTRAINT	FKsp_categoryID FOREIGN KEY (categoryID)
+    REFERENCES Categories(categoryID)
+
 	) AUTO_INCREMENT = 9001; 
 	
 
@@ -138,9 +146,12 @@ CREATE TABLE Goals(
 	finalDate	DATE			NOT NULL,
 	amount		INT				NOT NULL,
 	note		TEXT			NULL,
-	CONSTRAINT	FKgo_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
-	CONSTRAINT	FKgo_categoryID	FOREIGN KEY (categoryID) REFERENCES Categories(categoryID)
-	) AUTO_INCREMENT = 4001; 
+
+	CONSTRAINT	FKgo_userID	    FOREIGN KEY (userID) REFERENCES Users(userID),
+	CONSTRAINT	FKgo_categoryID	FOREIGN KEY (categoryID) 
+    REFERENCES Categories(categoryID)) 
+
+    AUTO_INCREMENT = 4001; 
 
 
 -- Create Investment Types table for the investments.
@@ -171,10 +182,9 @@ CREATE TABLE Investments(
 	marketValue		INT			NULL,
 	investReturn	INT			NOT NULL DEFAULT 0,
 	  CHECK (investReturn >= 0 AND investReturn <= 100),
-	CONSTRAINT	FKinv_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
-	CONSTRAINT	FKinv_typeID	FOREIGN KEY (investTypeID) REFERENCES InvestType(investTypeID)
-	) AUTO_INCREMENT = 6001;
 
---	**************************************************************************************
---	Insert data into database.
---	**************************************************************************************
+	CONSTRAINT	FKinv_userID	FOREIGN KEY (userID) REFERENCES Users(userID),
+	CONSTRAINT	FKinv_typeID	FOREIGN KEY (investTypeID) 
+    REFERENCES InvestType(investTypeID)
+
+	) AUTO_INCREMENT = 6001;
